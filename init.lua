@@ -87,8 +87,8 @@ minetest.register_tool("short_raycast:caster", {
 
 minetest.register_entity("short_raycast:entity", {
 	visual = "cube",
-	collisionbox = { -0.7, -0.01, -0.7, 0.7, 2.69, 0.7 },
-	visual_size = { x = 1.4, y = 2.7, z = 1.4 },
+	collisionbox = { -0.7, -2.7, -0.7, 0.7, 2.7, 0.7 },
+	visual_size = { x = 1.4, y = 5.4, z = 1.4 },
 	textures = {
 		"[combine:16x16^[noalpha^[colorize:#000:255",
 		"[combine:16x16^[noalpha^[colorize:#000:255",
