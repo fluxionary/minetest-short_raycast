@@ -30,15 +30,27 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	player:set_wielded_item(wielded_item)
 end)
 
+local function add_marker(pos, color)
+	minetest.add_particle({
+		pos = pos,
+		texture = "short_raycast_waypoint.png^[multiply:" .. color,
+		expirationtime = 60,
+		size = 1,
+	})
+end
+
 local function multicast(start, stop, objects, liquids, step)
 	local pos = start
 	local delta = (stop - start):normalize() * step
+	local length = start:distance(stop)
+	add_marker(pos, "red")
 	local function get_next_ray()
 		local old_pos = pos
 		pos = pos + delta
-		if start:distance(pos) > start:distance(stop) then
+		if start:distance(pos) > length then
 			return
 		end
+		add_marker(pos, "red")
 		return Raycast(old_pos, pos, objects, liquids)
 	end
 	local ray = get_next_ray()
@@ -72,13 +84,7 @@ minetest.register_tool("short_raycast:caster", {
 
 		for pt in multicast(start, start + (100 * look), true, false, step) do
 			if pt.type ~= "object" or pt.ref ~= user then
-				futil.create_ephemeral_hud(user, 60, {
-					hud_elem_type = "image_waypoint",
-					text = "short_raycast_waypoint.png",
-					scale = { x = -1 / 16 * 9, y = -1 },
-					alignment = { x = 0, y = -1 },
-					world_pos = pt.intersection_point,
-				})
+				add_marker(pt.intersection_point, "white")
 				break
 			end
 		end
